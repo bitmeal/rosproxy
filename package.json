@@ -1,0 +1,39 @@
+{
+  "name": "rosproxy",
+  "version": "0.1.0",
+  "description": "A proxy for communication on a ROS network. Proxying ROS XRPC calls bidirectionally and TCPROS connections unidirectionally.",
+  "main": "rosproxy.js",
+  "bin": "./rosproxy-cli.js",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "command-line-args": "^5.2.0",
+    "express": "^4.17.1",
+    "get-port": "^5.1.1",
+    "got": "^11.8.2",
+    "http-proxy-middleware": "^2.0.1",
+    "loglevel": "^1.7.1",
+    "loglevel-plugin-prefix": "^0.8.4",
+    "node-tcp-proxy": "^0.0.21",
+    "url-join": "^4.0.1",
+    "url-parse": "^1.5.3",
+    "xrpc": "^0.0.1",
+    "zip-array": "^1.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rosproxy": "node cli.js",
+    "app": "npm run rosproxy"
+  },
+  "keywords": [
+    "ROS",
+    "proxy",
+    "router"
+  ],
+  "author": "Arne Wendt (@bitmeal)",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bitmeal/rosproxy"
+  }
+}
