@@ -7,7 +7,7 @@ const log = require('loglevel');
 
 class ROSProxy {
     constructor(proxyPort, options) {
-        this.log = log.getLogger(`<${this.constructor.name}>`);
+        this.log = log.getLogger(this.constructor.name);
 
         this.options = Object.assign({
                 ROSMasterURI: process.env['ROS_MASTER_URI'],

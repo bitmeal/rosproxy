@@ -1,4 +1,8 @@
+#!/usr/bin/env node
+
 const ROSProxy = require('./rosproxy');
+
+const os = require('os');
 
 const commandLineArgs = require('command-line-args');
 const Url = require('url-parse');
@@ -19,7 +23,7 @@ formatter.apply(log, {
             ERROR: chalk.red,
         };
 
-        return `${chalk.gray(`[${timestamp}]`)} ${colors[level.toUpperCase()](level)} ${chalk.green(`${name}:`)}`;
+        return `${chalk.gray(`[${timestamp}]`)} ${colors[level.toUpperCase()](level)}\t${chalk.green(`<${name}>`)}`;
     },
 });
 

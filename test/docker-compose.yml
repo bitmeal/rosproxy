@@ -1,0 +1,61 @@
+version: '3.8'
+
+networks:
+  routed:
+    driver: macvlan
+
+services:
+  internal:
+    image: ros:noetic-ros-core
+    environment:
+    - ROS_HOSTNAME=internal
+    depends_on:
+    - roscore
+    - router
+    tty: true
+    networks:
+      routed:
+    volumes:
+    - ./bench/data/resolv.conf:/etc/resolv.conf
+
+  router:
+    build: ./bench/router
+    init: true
+    networks:
+      routed:
+        priority: 1000
+      default:
+        priority: 1
+    volumes:
+    - ./bench/data/resolv.conf:/data/resolv.conf
+    cap_add:
+    - NET_ADMIN
+  
+  rosproxy:
+    build: ../
+    environment:
+    - ROS_MASTER_URI=http://roscore:11311/
+    - ROS_HOSTNAME=rosproxy
+    networks:
+      routed:
+      default:
+    # command: ['33133']
+    command: ['-d']
+    tty: true
+
+  roscore:
+    image: ros:noetic-ros-core
+    environment:
+    - ROS_MASTER_URI=http://localhost:11311/
+    - ROS_HOSTNAME=roscore
+    command: ['roscore']
+    tty: true
+
+  external:
+    image: ros:noetic-ros-core
+    environment:
+    - ROS_MASTER_URI=http://roscore:11311/
+    - ROS_HOSTNAME=external
+    depends_on:
+    - roscore
+    tty: true

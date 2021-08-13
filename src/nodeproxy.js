@@ -11,7 +11,7 @@ const log = require('loglevel');
     let _TCPProxyInstance = TCPProxy.createProxy(0, 'localhost', 0, { quiet: true });
     _TCPProxyInstance.__proto__.getLogger = function(s) {
         // handling one server and port per proxy only; no load balancing
-        return log.getLogger(`<${this.constructor.name}> ${this.proxyPort} ~> ${this.serviceHosts[0]}:${this.servicePorts[0]}`);
+        return log.getLogger(`${this.constructor.name} [${this.proxyPort} -> ${this.serviceHosts[0]}:${this.servicePorts[0]}]`);
     };
     _TCPProxyInstance.__proto__.log = function(s) { this.getLogger().info(s); };
     _TCPProxyInstance.end();
@@ -39,7 +39,7 @@ class NodeProxy {
         this.publications = [];
         this.services = [];
 
-        this.log = log.getLogger(`<${this.constructor.name}> ${this.id}`);
+        this.log = log.getLogger(`${this.constructor.name} [${this.id}]`);
 
         this.log.info(`New node: ${this.getCallerAPI()} --> ${this.xrpcAddress}`);
     }
@@ -217,7 +217,7 @@ class NodeProxy {
     async processMethodResponse(xrpcreq, xrpcresp) {
         let method = `${xrpcreq.method || xrpcreq.methodName}Response`;
 
-        console.log.debug(`Processing method response for ${method}`);
+        this.log.debug(`Processing method response for ${method}`);
 
         if(this[method]) {
             // remove status code and message, and get copy to preserve original data
@@ -243,7 +243,7 @@ class NodeProxyFactory {
         this.xrpcProxyPort = xrpcProxyPort;
         this.getPortOpts = {};
 
-        this.log = log.getLogger(`<${this.constructor.name}>`);
+        this.log = log.getLogger(this.constructor.name);
 
         this.log.debug(`Node Factory options: ${JSON.stringify(options)}`);
         // this.log.info(`Node Factory up! XRPC Node API @ http://${this.proxyHostname}:${this.xrpcProxyPort}${this.xrpcNodeAPIBasePath}`);

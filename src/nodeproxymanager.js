@@ -13,7 +13,7 @@ const log = require('loglevel');
 
 class NodeProxyManager {
     constructor(proxyHostname, xrpcProxyPort, xrpcNodeAPIBasePath, options = {}) {
-        this.log = log.getLogger(`<${this.constructor.name}>`);
+        this.log = log.getLogger(this.constructor.name);
 
 
         this.sanitizerRe = /(^\/*)|(\/*$)/g;
@@ -30,7 +30,7 @@ class NodeProxyManager {
         this.proxyNodes = {};
 
         this.log.debug(`Proxy Manager options: ${JSON.stringify(options)}`);
-        this.log.info(`Proxy Manager up! XRPC Node API @http://${this.proxyHostname}:${this.xrpcProxyPort}${this.xrpcNodeAPIBasePath}`);
+        this.log.info(`Proxy Manager up! XRPC Node API @ http://${this.proxyHostname}:${this.xrpcProxyPort}${this.xrpcNodeAPIBasePath}`);
     }
 
     sanitizeNodeId(id) {
@@ -75,7 +75,7 @@ class NodeProxyManager {
             if(!xrpcAddress) {
                 // must have been unregisterService; should never happen as first seen call
                 // console.error('Could not get nodes xrpc address from MASTER API request!');
-                this.log.error(`Cannot instantiate new node handler from xrpc request: ${JSON.stringify(xrpcreq)}`);
+                this.log.warn(`Cannot instantiate new node handler from xrpc request: ${JSON.stringify(xrpcreq)}`);
                 return null;
             }
 
@@ -245,7 +245,7 @@ class NodeProxyManager {
             delete this.proxyNodes[id];
         }
         else {
-            this.log.error(`Requested to drop unknown node ${id}`);
+            this.log.warn(`Requested to drop unknown node ${id}`);
         }
     }
 
@@ -268,7 +268,7 @@ class NodeProxyManager {
     pingNode(id) {
         this.log.debug(`Pinging node ${id} (using getPid)`);
         return new Promise((resolve, _reject) => {
-            let xrpcClient = new uXRPC(this.proxyNodes[id].xrpcAddress);
+            let xrpcClient = new uXRPC(this.proxyNodes[id].xrpcAddress, (this.log.getLevel() == 2 ? { loglevel: 'warn' } : {}));
             xrpcClient.call('getPid', [this.proxyNodes[id].id])
                 .then((_res) => {
                     this.log.debug(`Pinging ${id} OK`);

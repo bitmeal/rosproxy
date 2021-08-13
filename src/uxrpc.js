@@ -17,7 +17,11 @@ class uXRPC {
         });
         this.target = target;
 
-        this.log = log.getLogger(`<${this.constructor.name}> ${target}`);
+        this.log = log.getLogger(`${this.constructor.name} [${target}]`);
+
+        if(this.options.loglevel) {
+            this.log.setLevel(this.options.loglevel);
+        }
         this.log.info(`New uXRPC client for target ${this.target}; with options ${JSON.stringify(this.options)}`);
     }
 
