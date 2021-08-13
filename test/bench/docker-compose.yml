@@ -16,10 +16,10 @@ services:
     networks:
       routed:
     volumes:
-    - ./bench/data/resolv.conf:/etc/resolv.conf
+    - ./data/resolv.conf:/etc/resolv.conf
 
   router:
-    build: ./bench/router
+    build: ./router
     init: true
     networks:
       routed:
@@ -27,12 +27,12 @@ services:
       default:
         priority: 1
     volumes:
-    - ./bench/data/resolv.conf:/data/resolv.conf
+    - ./data/resolv.conf:/data/resolv.conf
     cap_add:
     - NET_ADMIN
   
   rosproxy:
-    build: ../
+    build: ../../
     environment:
     - ROS_MASTER_URI=http://roscore:11311/
     - ROS_HOSTNAME=rosproxy
