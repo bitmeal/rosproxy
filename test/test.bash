@@ -16,8 +16,9 @@ fi
 ## test for and checkout bats
 if ! bats/bin/bats --version > /dev/null ; then
     echo "# bats not found; checking out submodules"
-    git submodule update --init --recursive
+    git submodule update --init --recursive > /dev/null
 fi
 
 ## run tests
+export LC_COLLATE=C
 bats/bin/bats ${@} .
