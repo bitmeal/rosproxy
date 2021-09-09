@@ -288,7 +288,7 @@ class NodeProxyFactory {
 
         let xrpcProxy = await this.makeProxy('localhost', this.xrpcProxyPort);
         // id, xrpcAddress, proxyHostname, xrpcProxy, xrpcNodeAPIBasePath, proxyGenerator
-        return new NodeProxy(id, xrpcAddress, this.proxyHostname, xrpcProxy, this.xrpcNodeAPIBasePath, this.makeProxy);
+        return new NodeProxy(id, xrpcAddress, this.proxyHostname, xrpcProxy, this.xrpcNodeAPIBasePath, this.makeProxy.bind(this));
     }
 }
 
