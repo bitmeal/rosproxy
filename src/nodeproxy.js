@@ -250,11 +250,11 @@ class NodeProxyFactory {
         this.log.info(`Node Factory up!`);
 
         if(options) {
-            if(options.portMin && options.portMax) {
+            if(options.portTCPmin && options.portTCPmax) {
                 this.getPortOpts = {
-                    port: getPort.makeRange(options.portMin, options.portMax)
+                    port: getPort.makeRange(options.portTCPmin, options.portTCPmax)
                 }
-                this.log.info(`Node Factory providing TCP proxies from port range: ${options.portMin}-${options.portMax}`);
+                this.log.info(`Node Factory providing TCP proxies from port range: ${options.portTCPmin}-${options.portTCPmax}`);
             }
             else if(Array.isArray(options) && options.length == 2) {
                 this.getPortOpts = {
