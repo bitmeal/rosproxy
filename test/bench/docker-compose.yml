@@ -40,7 +40,8 @@ services:
       routed:
       default:
     # command: ['33133']
-    command: ['-d']
+    # scope ports to range 50000-50100
+    command: ['-d', '-r', '50000-50100']
     tty: true
 
   roscore:

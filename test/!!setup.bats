@@ -3,10 +3,21 @@
 setup() {
     load 'test_helper/helpers'
     _common_setup
+}
 
-    ensure_bench
+@test "[BENCH] CLEAN" {
+    run remove_bench
+}
+
+@test "[BENCH] BUILD" {
+    run build_bench
 }
 
 @test "[BENCH] UP" {
-    bench_ok
+    run ensure_bench
 }
+
+@test "[BENCH] OK" {
+    run bench_ok
+}
+
