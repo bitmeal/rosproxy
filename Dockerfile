@@ -1,8 +1,12 @@
-FROM node:alpine
+FROM node:slim
+# node:slim (based on debian) seems to support use of hosts mdns resolver
+# FROM node:alpine
+
+COPY package*.json /app/
+
+WORKDIR /app
+RUN npm ci
 
 COPY . /app
-WORKDIR /app
-
-RUN npm ci
 
 ENTRYPOINT ["node", "/app/rosproxy-cli.js"]

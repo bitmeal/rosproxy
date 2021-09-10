@@ -246,30 +246,49 @@ class NodeProxyFactory {
         this.log = log.getLogger(this.constructor.name);
 
         this.log.debug(`Node Factory options: ${JSON.stringify(options)}`);
-        // this.log.info(`Node Factory up! XRPC Node API @ http://${this.proxyHostname}:${this.xrpcProxyPort}${this.xrpcNodeAPIBasePath}`);
-        this.log.info(`Node Factory up!`);
+        this.parsePortOpts(options);
 
+        this.log.info(`Node Factory up!`);
+        // this.log.info(`Node Factory up! XRPC Node API @ http://${this.proxyHostname}:${this.xrpcProxyPort}${this.xrpcNodeAPIBasePath}`);
+    }
+
+    parsePortOpts(options) {
         if(options) {
             if(options.portTCPmin && options.portTCPmax) {
                 this.getPortOpts = {
-                    port: getPort.makeRange(options.portTCPmin, options.portTCPmax)
+                    portTCPmin: options.portTCPmin,
+                    portTCPmax: options.portTCPmax
                 }
-                this.log.info(`Node Factory providing TCP proxies from port range: ${options.portTCPmin}-${options.portTCPmax}`);
             }
             else if(Array.isArray(options) && options.length == 2) {
                 this.getPortOpts = {
-                    port: getPort.makeRange(options[0], options[1])
+                    portTCPmin: options[0],
+                    portTCPmax: options[1]
                 }
-                this.log.info(`Node Factory providing TCP proxies from port range: ${options[0]}-${options[1]}`);
             }
-            else {
-                this.log.info('Node Factory providing TCP proxies with random port');
-            }
+        }
+
+        // log port range
+        if(this.getPortOpts.portTCPmin && this.getPortOpts.portTCPmax) {
+            this.log.info(`Node Factory providing TCP proxies from port range: ${this.getPortOpts.portTCPmin}-${this.getPortOpts.portTCPmax}`);
+        }
+        else {
+            this.log.info('Node Factory providing TCP proxies with random port');
+        }
+    }
+
+    getPorts() {
+        if(this.getPortOpts.portTCPmin && this.getPortOpts.portTCPmax) {
+           return getPort.makeRange(this.getPortOpts.portTCPmin, this.getPortOpts.portTCPmax);
+        }
+        else {
+            // 0 = random port
+            return 0;
         }
     }
 
     async makeProxy(hostname, port) {
-        let proxyPort = await getPort(this.getPortOpts);
+        let proxyPort = await getPort({ port: this.getPorts() });
         this.log.info(`Creating proxy: ${proxyPort} ~> ${hostname}:${port}`);
 
         let logging_options = {
