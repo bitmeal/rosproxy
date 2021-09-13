@@ -19,10 +19,19 @@
     "xrpc": "^0.0.1",
     "zip-array": "^1.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "run-script-os": "^1.1.6"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "rosproxy": "node cli.js",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags",
+    
+    "test": "run-script-os",
+    "test:win32": "cd test && wsl ./test.bash",
+    "test:linux": "cd test && ./test.bash",
+    "test:default": "exit 1",
+    
+    "rosproxy": "node rosproxy-cli.js",
     "app": "npm run rosproxy"
   },
   "keywords": [
