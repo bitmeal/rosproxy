@@ -92,6 +92,8 @@ ensure_bench() {
             mkdir -p ${BENCH_DIR}/logs/
         fi
 
+        rm -f ${BENCH_DIR}/logs/*
+
         run_in_bench docker-compose up -d
         bench_ok
     else
