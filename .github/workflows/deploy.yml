@@ -92,8 +92,4 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       -
         name: Build and push multiarch images, as :latest to ghcr.io
-        run: docker buildx build --push --platform "linux/amd64,linux/arm64" --tag ghcr.io/bitmeal/rosproxy:latest .
-      -
-        name: Tag and push as version from tag
-        if: needs.prepare.outputs.tag == 'true'
-        run: docker tag ghcr.io/bitmeal/rosproxy:latest ghcr.io/bitmeal/rosproxy:${{ needs.prepare.outputs.version }} && docker push ghcr.io/bitmeal/rosproxy:${{ needs.prepare.outputs.version }}
+        run: docker buildx build --push --platform "linux/amd64,linux/arm64" --tag ghcr.io/bitmeal/rosproxy:latest $([[ ${{ needs.prepare.outputs.tag }} == 'true' ]] && echo "--tag ghcr.io/bitmeal/rosproxy:${{ needs.prepare.outputs.version }}") .
