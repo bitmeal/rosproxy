@@ -97,7 +97,7 @@ ensure_bench() {
 
 teardown_bench() {
     run_in_bench docker-compose down
-    remove_bench
+    # remove_bench
 }
 
 remove_bench() {
