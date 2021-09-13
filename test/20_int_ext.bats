@@ -6,8 +6,8 @@ setup() {
 }
 
 @test "[PUB/SUB][PROXY] internal -> external" {
-    TIMEOUT_PUB=25
-    TIMEOUT_SUB=20
+    TIMEOUT_PUB=60
+    TIMEOUT_SUB=60
     SPAWN_DELAY=5
     MSG_COUNT=10
 
