@@ -1,6 +1,6 @@
 {
   "name": "rosproxy",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A proxy for communication on a ROS network. Proxying ROS XRPC calls bidirectionally and TCPROS connections unidirectionally.",
   "main": "rosproxy.js",
   "bin": "./rosproxy-cli.js",
