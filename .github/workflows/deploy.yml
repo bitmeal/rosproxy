@@ -7,7 +7,49 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Clone
+        uses: actions/checkout@v2
+      -
+        name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - 
+        name: Fetch dependencies
+        run: npm install
+      - name: Run Tests
+        run: npm test
+
+  npm:
+    if: github.event.ref_type == 'tag'
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Clone
+        uses: actions/checkout@v2
+      -
+        name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - 
+        name: Fetch dependencies
+        run: npm install
+      - name: Run Tests
+        run: npm test
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+
+  docker:
+    needs:
+      - test
     runs-on: ubuntu-latest
     steps:
       -
