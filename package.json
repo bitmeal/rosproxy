@@ -1,6 +1,6 @@
 {
   "name": "rosproxy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A proxy for communication on a ROS network. Proxying ROS XRPC calls bidirectionally and TCPROS connections unidirectionally.",
   "main": "rosproxy.js",
   "bin": "./rosproxy-cli.js",
@@ -25,7 +25,7 @@
   "scripts": {
     "preversion": "npm test",
     "postversion": "git push && git push --tags",
-    
+
     "test": "run-script-os",
     "test:win32": "cd test && wsl ./test.bash",
     "test:linux": "cd test && ./test.bash",
