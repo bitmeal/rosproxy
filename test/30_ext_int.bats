@@ -8,7 +8,7 @@ setup() {
 @test "[PUB/SUB][PROXY] external -> internal" {
     TIMEOUT_PUB=60
     TIMEOUT_SUB=60
-    SPAWN_DELAY=5
+    SPAWN_DELAY=10
     MSG_COUNT=10
 
     bench_exec_timeout ${TIMEOUT_PUB} external /ros_entrypoint.sh rostopic pub -r 100 /chat std_msgs/String hello &
