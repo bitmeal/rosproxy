@@ -21,8 +21,13 @@ jobs:
       - 
         name: Fetch dependencies
         run: npm install
-      - name: Run Tests
+      -
+        name: Run Tests
         run: npm test
+      -
+        name: Show Compose Log on Error
+        if: ${{ failure() }}
+        run: cd test/bench && docker-compose logs
 
   prepare:
     runs-on: ubuntu-latest
