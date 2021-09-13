@@ -87,6 +87,10 @@ ensure_bench() {
             print "creating data/resolv.conf"
             touch ${BENCH_DIR}/data/resolv.conf
         fi
+        if [ ! -d ${BENCH_DIR}/logs/ ]; then
+            print "creating logs/"
+            mkdir -p ${BENCH_DIR}/logs/
+        fi
 
         run_in_bench docker-compose up -d
         bench_ok
@@ -96,8 +100,9 @@ ensure_bench() {
 }
 
 teardown_bench() {
+    run_in_bench bash -c "docker-compose logs > logs/log"
     run_in_bench docker-compose down
-    # remove_bench
+    remove_bench
 }
 
 remove_bench() {

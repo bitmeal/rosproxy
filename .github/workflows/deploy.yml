@@ -27,7 +27,7 @@ jobs:
       -
         name: Show Compose Log on Error
         if: ${{ failure() }}
-        run: cd test/bench && docker-compose logs
+        run: cat test/bench/logs/*
 
   prepare:
     runs-on: ubuntu-latest
