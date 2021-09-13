@@ -24,10 +24,30 @@ jobs:
       - name: Run Tests
         run: npm test
 
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.num }}
+      tag: ${{ steps.tag.outputs.truthy }}
+    steps:
+      -
+        name: Clone
+        uses: actions/checkout@v2
+      -
+        name: Get Version
+        id: version
+        run: echo ::set-output name=num::${GITHUB_REF#refs/*/}
+      -
+        name: Is Tag?
+        id: tag
+        run: echo ::set-output name=truthy::$([[ ${{ steps.version.outputs.num }} =~ ^v([0-9]+\.){2}[0-9]+[-\+].*$ ]] && echo 'true' || echo 'false')
+
+
   npm:
-    if: github.event.ref_type == 'tag'
+    if: needs.prepare.outputs.tag == 'true'
     needs:
       - test
+      - prepare
     runs-on: ubuntu-latest
     steps:
       -
@@ -42,15 +62,12 @@ jobs:
   docker:
     needs:
       - test
+      - prepare
     runs-on: ubuntu-latest
     steps:
       -
         name: Clone
         uses: actions/checkout@v2
-      -
-        name: Get Version
-        id: ver
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -70,5 +87,5 @@ jobs:
         run: docker buildx build --push --platform "linux/amd64,linux/arm64" --tag ghcr.io/bitmeal/rosproxy:latest .
       -
         name: Tag and push as version from tag
-        if: github.event.ref_type == 'tag'
-        run: docker tag ghcr.io/bitmeal/rosproxy:latest ghcr.io/bitmeal/rosproxy:${{ steps.ver.outputs.tag }} && docker push ghcr.io/bitmeal/rosproxy:${{ steps.ver.outputs.tag }}
+        if: needs.prepare.outputs.tag == 'true'
+        run: docker tag ghcr.io/bitmeal/rosproxy:latest ghcr.io/bitmeal/rosproxy:${{ needs.prepare.outputs.version }} && docker push ghcr.io/bitmeal/rosproxy:${{ needs.prepare.outputs.version }}
