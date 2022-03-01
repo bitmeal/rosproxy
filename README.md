@@ -50,7 +50,7 @@ ROS_MASTER_URI=http://myhost:11311/ rosrun <pkg> <node>
 
 ### Proxying containerized ROS nodes
 Using ROSProxy you can enable containerized ROS nodes to communicate with nodes running "directly" on a network - and vice versa.
-Below *docker-compose* file uses a container *node* running some ROS node, and a *rosproxy* container. As in the example above, `ROS_MASTER_URI` is set to the actual masters address for the proxy and the proxy address for the node. We configure ROSProxy to allocate all its proxy ports from the range `50000-50100`, which should serve *~50* nodes (*n/2*).
+Below *docker-compose* file uses a container *node* running some ROS node, and a *rosproxy* container. As in the example above, `ROS_MASTER_URI` is set to the actual masters address for the proxy and the proxy address for the node. We configure ROSProxy to allocate all its proxy ports from the range `50000-50100`, which should serve *~50* nodes (*n/2*). This port range gets forwarded to the host and will make all containerized nodes using the proxy available from the outside.
 ```yaml
 version: '3.8'
 
@@ -75,7 +75,7 @@ services:
 ```
 
 
-## Dev
+## Development
 ### Testing
 > ⚠ Test requires *docker*/*docker-compose* (and *WSL* on Windows)
 
