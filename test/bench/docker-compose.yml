@@ -1,8 +1,11 @@
 version: '3.8'
 
+# priority ordering seems broken, oder is achieved by lexicographical ordering
 networks:
   routed:
     driver: macvlan
+  world:
+    # driver: bridge
 
 services:
   internal:
@@ -18,18 +21,34 @@ services:
     volumes:
     - ./data/resolv.conf:/etc/resolv.conf
 
+  internal_debugger:
+    image: alpine
+    depends_on:
+    - roscore
+    - router
+    tty: true
+    networks:
+      routed:
+    volumes:
+    - ./data/resolv.conf:/etc/resolv.conf
+
   router:
     build: ./router
     init: true
     networks:
       routed:
         priority: 1000
-      default:
+      world:
         priority: 1
     volumes:
     - ./data/resolv.conf:/data/resolv.conf
     cap_add:
     - NET_ADMIN
+    depends_on:
+    - rosproxy
+    - roscore
+    - external
+
   
   rosproxy:
     build: ../../
@@ -38,7 +57,7 @@ services:
     - ROS_HOSTNAME=rosproxy
     networks:
       routed:
-      default:
+      world:
     # command: ['33133']
     # scope ports to range 50000-50100
     command: ['-d', '-r', '50000-50100']
@@ -49,6 +68,8 @@ services:
     environment:
     - ROS_MASTER_URI=http://localhost:11311/
     - ROS_HOSTNAME=roscore
+    networks:
+      world:
     command: ['roscore']
     tty: true
 
@@ -57,6 +78,8 @@ services:
     environment:
     - ROS_MASTER_URI=http://roscore:11311/
     - ROS_HOSTNAME=external
+    networks:
+      world:
     depends_on:
     - roscore
     tty: true

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# remove healtcheck token from previous start
+rm -rf /router_up || true
+
 # ENV:
 #   - ROUTE_NET
 #   - (ROUTE_GATEWAY)
@@ -86,7 +89,8 @@ ip addr add ${ROUTE_GATEWAY} dev ${ROUTE_IF}
 
 # populate shared resolv.conf with own (gateway) address
 echo "writing resolv.conf for routed clients in /data/resolv.conf"
-tac /etc/resolv.conf | sed "/^nameserver.*/i nameserver $(echo ${ROUTE_GATEWAY} | sed -E 's#/[[:digit:]]+$##')" | tac > /data/resolv.conf
+# tac /etc/resolv.conf | sed "/^nameserver.*/i nameserver $(echo ${ROUTE_GATEWAY} | sed -E 's#/[[:digit:]]+$##')" | tac > /data/resolv.conf
+cat /etc/resolv.conf | sed "/^nameserver.*/i nameserver $(echo ${ROUTE_GATEWAY} | sed -E 's#/[[:digit:]]+$##')" > /data/resolv.conf
 
 
 # enable routing
@@ -102,6 +106,11 @@ done
 # run dnsmasq as local DNS forwarder; enable name resolution of containers on *external* networks
 echo "starting dnsmasq..."
 dnsmasq -q -d &
+
+
+# write healtcheck token
+touch /router_up
+
 
 # execute command; or monitor using conntrack
 if [ ${@} ]; then
